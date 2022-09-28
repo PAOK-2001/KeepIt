@@ -98,13 +98,13 @@ void laneDetector::findLanes(){
     cvtColor(lineImg,lineImg,COLOR_GRAY2BGR);
     // Make mask using OpenCV poligon and aproximate coordinates based on lane width and camera FOV
     // Create points for polygon
-    Point p1 = Point(10,mask.rows);
-    Point p2 = Point(1120,650);
-    Point p3  = Point(1740,mask.rows);
-    vector<Point> ROI ={p1,p2,p3};
-    fillPoly(mask,ROI,(255,255,255));
+    //Point p1 = Point(10,mask.rows);
+    //Point p2 = Point(1120,650);
+    //Point p3  = Point(1740,mask.rows);
+    //vector<Point> ROI ={p1,p2,p3};
+    //fillPoly(mask,ROI,(255,255,255));
     // Exclude Region of Interest by combining mask using bitwise_and operator
-    bitwise_and(mask,edgeImg,edgeImg);
+    //bitwise_and(mask,edgeImg,edgeImg);
     // Find all lines in frame using HoughLinesP
     vector<Vec4i> lines;
     // Uses HoughTransform to fine most lines in canny image.
@@ -156,6 +156,7 @@ void laneDetector::display(Mat cameraFrame){
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
     namedWindow("Lane Detector");
     imshow("Lane Detector", cameraFrame);
+    imshow("Line",edgeImg);
     
 }
 

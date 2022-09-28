@@ -12,12 +12,7 @@ using namespace cv;
 int main(){
     laneDetector lanes;
     Mat frame;
-    // Create VideoCapture object
-    int test;
-    cout<<"Choose number of test footage to use\n";
-    cin>>test;
-    string path = "Test_Footage/Test"+to_string(test)+".mp4";
-    VideoCapture dashCam(path);
+    VideoCapture dashCam(0);
     // Check if the dashCam is readable
     if(!dashCam.isOpened()){
         cout<<"Error reading dashCam feed\n";
