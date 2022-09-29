@@ -86,6 +86,12 @@ void laneDetector::loadFrame(Mat cameraFrame){
     Mat grayScale;
     cvtColor(cameraFrame,grayScale,COLOR_BGR2GRAY);
     // Canny edge detection
+    Mat maskYellow, maskWhite;
+    inRange(edgeImg, Scalar(20, 100, 100), Scalar(30, 255, 255), maskYellow);
+    inRange(edgeImg, Scalar(150, 150, 150), Scalar(255, 255, 255), maskWhite);
+    Mat colorMask;
+    bitwise_or(maskYellow, maskWhite, colorMask);
+    bitwise_and(colorMask,grayScale,grayScale);
     Canny(grayScale,edgeImg,40,150);
 }
 
@@ -96,16 +102,7 @@ void laneDetector::findLanes(){
     // Create canvas for line image, converting to BGR to allow for color lanes. 
     lineImg  = mask;
     cvtColor(lineImg,lineImg,COLOR_GRAY2BGR);
-    // Make mask using OpenCV poligon and aproximate coordinates based on lane width and camera FOV
-    // Create points for polygon
-    //Point p1 = Point(10,mask.rows);
-    //Point p2 = Point(1120,650);
-    //Point p3  = Point(1740,mask.rows);
-    //vector<Point> ROI ={p1,p2,p3};
-    //fillPoly(mask,ROI,(255,255,255));
-    // Exclude Region of Interest by combining mask using bitwise_and operator
-    //bitwise_and(mask,edgeImg,edgeImg);
-    // Find all lines in frame using HoughLinesP
+    // Mask colors
     vector<Vec4i> lines;
     // Uses HoughTransform to fine most lines in canny image.
     HoughLinesP(edgeImg,lines,2,CV_PI/180,200,40,5);
