@@ -87,8 +87,8 @@ void laneDetector::loadFrame(Mat cameraFrame){
     cvtColor(cameraFrame,grayScale,COLOR_BGR2GRAY);
     // Canny edge detection
     Mat maskYellow, maskWhite;
-    inRange(edgeImg, Scalar(20, 100, 100), Scalar(30, 255, 255), maskYellow);
-    inRange(edgeImg, Scalar(150, 150, 150), Scalar(255, 255, 255), maskWhite);
+    inRange(grayScale, Scalar(20, 100, 100), Scalar(30, 255, 255), maskYellow);
+    inRange(grayScale, Scalar(150, 150, 150), Scalar(255, 255, 255), maskWhite);
     Mat colorMask;
     bitwise_or(maskYellow, maskWhite, colorMask);
     bitwise_and(colorMask,grayScale,grayScale);
