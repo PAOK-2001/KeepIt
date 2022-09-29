@@ -13,11 +13,15 @@ int main(){
     laneDetector lanes;
     Mat frame;
     VideoCapture dashCam(0);
+    dashCam.set(CAP_PROP_FPS,15);
+    dashCam.set(CAP_PROP_FRAME_WIDTH,384);
+    dashCam.set(CAP_PROP_FRAME_HEIGHT,216);
     // Check if the dashCam is readable
     if(!dashCam.isOpened()){
         cout<<"Error reading dashCam feed\n";
         return -1;
     }
+    int counter = 0;
     for (;;){
         dashCam.read(frame);
         // Check if selected source is sending information
@@ -25,7 +29,7 @@ int main(){
             cout<<"NULL frame ";
             break;
         }
-        // Load image into lane detector
+            // Load image into lane detector
         lanes.loadFrame(frame);
         // Find lanes on given frame
         lanes.findLanes();
@@ -33,10 +37,9 @@ int main(){
         lanes.findCenter();
         // Overlap lanes on the video
         lanes.display(frame);
-        
-        // Wait 5 miliseconds
+        // Wait 1 miliseconds
         // Read key board input, setting esc as break key
-        if(waitKey(5)== 27){
+        if(waitKey(1)== 27){
             break;
         }
     }
