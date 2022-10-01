@@ -97,7 +97,7 @@ void laneDetector::findLanes(){
     // Mask colors
     vector<Vec4i> lines;
     // Uses HoughTransform to fine most lines in canny image.
-    HoughLinesP(edgeImg,lines,2,CV_PI/180,200,40,5);
+    HoughLinesP(edgeImg,lines,4,CV_PI/180,180,40,5);
     // Find regression for lines
     vector<float> rightSide_slopes, rightSide_intercepts, leftSide_slopes,leftSide_intercepts;
     for(auto &lineP: lines){
