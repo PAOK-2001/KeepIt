@@ -83,7 +83,7 @@ void laneDetector::loadFrame(Mat cameraFrame){
     // Image preprocessing code to load camera feed
     Mat maskYellow, maskWhite, colorMask;
     inRange(cameraFrame, Scalar(0, 100, 175), Scalar(164, 245, 245), maskYellow);
-    inRange(cameraFrame, Scalar(155, 155, 155), Scalar(255, 255, 255), maskWhite);
+    inRange(cameraFrame, Scalar(130, 130, 130), Scalar(255, 255, 255), maskWhite);
     bitwise_or(maskYellow, maskWhite, colorMask);
     Canny(colorMask,edgeImg,40,150);
 }
@@ -97,16 +97,18 @@ void laneDetector::findLanes(){
     // Mask colors
     vector<Vec4i> lines;
     // Uses HoughTransform to fine most lines in canny image.
-    HoughLinesP(edgeImg,lines,4,CV_PI/180,180,40,5);
+    HoughLinesP(edgeImg,lines,3,CV_PI/180,170,50,10);
     // Find regression for lines
-    vector<float> rightSide_slopes, rightSide_intercepts, leftSide_slopes,leftSide_intercepts;
+    vector<float> rightSide_slopes, rightSide_intercepts, leftSide_slopes,leftSide_intercepts,slopes,intercepts;
     for(auto &lineP: lines){
         pair<float, float> fit =linearFit(lineP);
         // Exclude outliers.
-        if(abs(fit.first)<0.25 || abs(fit.first) > 12){
-            ;
+        if(abs(fit.first)>0.25 && abs(fit.first) < 50){
+            slopes.push_back(fit.first);
+            cout << fit.first << endl;
+            intercepts.push_back(fit.second);
         }
-        // Seperate left lane (negative slope)
+        /* Seperate left lane (negative slope)
         else if(fit.first<0){
             leftSide_slopes.push_back(fit.first);
             leftSide_intercepts.push_back(fit.second);
@@ -115,6 +117,19 @@ void laneDetector::findLanes(){
         else{
             rightSide_slopes.push_back(fit.first);
             rightSide_intercepts.push_back(fit.second);
+        }*/
+    }
+    float averageSlope = averageCoefficient(slopes);
+    for(int i = 0; i < slopes.size(); i++){
+        if(abs(averageSlope) > 0 ){
+            if(slopes[i] > averageSlope){
+                leftSide_slopes.push_back(slopes[i]);
+                leftSide_intercepts.push_back(intercepts[i]);
+            }
+            else{
+                rightSide_slopes.push_back(slopes[i]);
+                rightSide_intercepts.push_back(intercepts[i]);
+            }
         }
     }
     // For each side, find average lane
