@@ -14,8 +14,6 @@ int main(){
     Mat frame;
     VideoCapture dashCam(0);
     dashCam.set(CAP_PROP_FPS,15);
-    dashCam.set(CAP_PROP_FRAME_WIDTH,384);
-    dashCam.set(CAP_PROP_FRAME_HEIGHT,216);
     // Check if the dashCam is readable
     if(!dashCam.isOpened()){
         cout<<"Error reading dashCam feed\n";

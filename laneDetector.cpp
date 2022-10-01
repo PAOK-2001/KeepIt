@@ -40,6 +40,7 @@ pair<float,float> laneDetector::linearFit(Vec4i lineCoordinates){
     float slope     = (lineCoordinates[3] -lineCoordinates[1])/(float)(lineCoordinates[2]-lineCoordinates[0]);
     float intercept =  lineCoordinates[1] - slope*lineCoordinates[0];
     return  make_pair(slope,intercept);
+    
 }
 
 // Find the average from a vector of cohedicientes
@@ -80,19 +81,17 @@ Vec4i laneDetector::makeCoordinate(float slope, float intercept, int imgHeight){
 // @param cameraFrame OpenCV image matrix
 void laneDetector::loadFrame(Mat cameraFrame){
     // Image preprocessing code to load camera feed
-    // Saturate image
-    cameraFrame = cameraFrame*1.20;
+    Mat maskYellow, maskWhite, colorMask;
+    inRange(cameraFrame, Scalar(0, 100, 175), Scalar(164, 245, 245), maskYellow);
+    inRange(cameraFrame, Scalar(155, 155, 155), Scalar(255, 255, 255), maskWhite);
+    bitwise_or(maskYellow, maskWhite, colorMask);
     // Convert to grayscale
     Mat grayScale;
     cvtColor(cameraFrame,grayScale,COLOR_BGR2GRAY);
-    // Canny edge detection
-    Mat maskYellow, maskWhite;
-    inRange(grayScale, Scalar(20, 100, 100), Scalar(30, 255, 255), maskYellow);
-    inRange(grayScale, Scalar(150, 150, 150), Scalar(255, 255, 255), maskWhite);
-    Mat colorMask;
-    bitwise_or(maskYellow, maskWhite, colorMask);
     bitwise_and(colorMask,grayScale,grayScale);
-    Canny(grayScale,edgeImg,40,150);
+    imshow("Filtered", grayScale);
+    // Canny edge detection
+    Canny(colorMask,edgeImg,40,150);
 }
 
 void laneDetector::findLanes(){
@@ -111,7 +110,7 @@ void laneDetector::findLanes(){
     for(auto &lineP: lines){
         pair<float, float> fit =linearFit(lineP);
         // Exclude outliers.
-        if(fit.first == 0){
+        if(abs(fit.first)<0.25 || abs(fit.first) > 12){
             ;
         }
         // Seperate left lane (negative slope)
