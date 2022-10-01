@@ -19,7 +19,7 @@ class laneDetector{
         Point center;
         // Auxiliary functions
         static pair<float,float> linearFit(Vec4i lineCoordinates); 
-        static float averageCoheficient(vector<float> registeredCoheficients);
+        static float averageCoefficient(vector<float> registeredCoefficients);
         static Vec4i makeCoordinate(float slope, float intercept, int imgHeight);
 
     public:
@@ -46,13 +46,13 @@ pair<float,float> laneDetector::linearFit(Vec4i lineCoordinates){
 // Find the average from a vector of cohedicientes
 // @param registerCoheficients Vector of floats
 // @return avrg float representing average of vector. Retuns 0 if empty
-float laneDetector::averageCoheficient(vector<float> registeredCoheficients){
+float laneDetector::averageCoefficient(vector<float> registeredCoefficients){
     float size, sum;
-    size = registeredCoheficients.size();
+    size = registeredCoefficients.size();
     if(size == 0){
         return 0;
     }
-    for(auto & num: registeredCoheficients){
+    for(auto & num: registeredCoefficients){
         sum+=num;
     }
     float avrg = sum/(float)size;
@@ -85,12 +85,6 @@ void laneDetector::loadFrame(Mat cameraFrame){
     inRange(cameraFrame, Scalar(0, 100, 175), Scalar(164, 245, 245), maskYellow);
     inRange(cameraFrame, Scalar(155, 155, 155), Scalar(255, 255, 255), maskWhite);
     bitwise_or(maskYellow, maskWhite, colorMask);
-    // Convert to grayscale
-    Mat grayScale;
-    cvtColor(cameraFrame,grayScale,COLOR_BGR2GRAY);
-    bitwise_and(colorMask,grayScale,grayScale);
-    imshow("Filtered", grayScale);
-    // Canny edge detection
     Canny(colorMask,edgeImg,40,150);
 }
 
@@ -98,7 +92,6 @@ void laneDetector::findLanes(){
     // Masking to exclude ROI
     Mat mask = edgeImg.clone();
     mask     = Scalar(0,0,0);
-    // Create canvas for line image, converting to BGR to allow for color lanes. 
     lineImg  = mask;
     cvtColor(lineImg,lineImg,COLOR_GRAY2BGR);
     // Mask colors
@@ -125,10 +118,10 @@ void laneDetector::findLanes(){
         }
     }
     // For each side, find average lane
-    float rightSlope     = averageCoheficient(rightSide_slopes);
-    float rightIntercept = averageCoheficient(rightSide_intercepts);
-    float leftSlope      = averageCoheficient(leftSide_slopes);
-    float leftIntercept  = averageCoheficient(leftSide_intercepts);
+    float rightSlope     = averageCoefficient(rightSide_slopes);
+    float rightIntercept = averageCoefficient(rightSide_intercepts);
+    float leftSlope      = averageCoefficient(leftSide_slopes);
+    float leftIntercept  = averageCoefficient(leftSide_intercepts);
     // Make coordinates for final lanes
     leftLine  = makeCoordinate(leftSlope, leftIntercept, edgeImg.rows);
     rightLine = makeCoordinate(rightSlope, rightIntercept, edgeImg.rows);
@@ -152,8 +145,7 @@ void laneDetector::display(Mat cameraFrame){
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
     namedWindow("Lane Detector");
     imshow("Lane Detector", cameraFrame);
-    imshow("Line",edgeImg);
-    
+    imshow("Line",edgeImg); 
 }
 
 #endif
