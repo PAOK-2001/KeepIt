@@ -26,7 +26,7 @@ class laneDetector{
         laneDetector();
         void loadFrame(Mat cameraFrame);
         void findLanes();
-        void findCenter();
+        Point findCenter();
         void display(Mat cameraFrame);
 };
 
@@ -105,7 +105,6 @@ void laneDetector::findLanes(){
         // Exclude outliers.
         if(abs(fit.first)>0.25 && abs(fit.first) < 50){
             slopes.push_back(fit.first);
-            cout << fit.first << endl;
             intercepts.push_back(fit.second);
         }
         /* Seperate left lane (negative slope)
@@ -146,11 +145,12 @@ void laneDetector::findLanes(){
 }
 
 //Find center given the two lanes.
-void laneDetector::findCenter(){
+Point laneDetector::findCenter(){
     float x = leftLine[2]+((rightLine[2]-leftLine[2])/2.0);
     float y = (rightLine[3]);
     center = Point(x,y);
     circle(lineImg,center,15,Scalar(0,0,255),-1);
+    return center;
 }
 
 // Displays detected lanes unto a given image

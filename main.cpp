@@ -5,6 +5,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
+#include <wiringPiI2C.h>
+#include <wiringPi.h>
 
 using namespace std;
 using namespace cv;
@@ -29,12 +31,15 @@ int main(){
             cout<<"NULL frame ";
             break;
         }
-            // Load image into lane detector
+        // Load image into lane detector
         lanes.loadFrame(frame);
         // Find lanes on given frame
         lanes.findLanes();
         // Find center of previously calculated lanes
-        lanes.findCenter();
+        if(lanes.findCenter().x > 0 && lanes.findCenter().x < dashCam.get(CAP_PROP_FRAME_WIDTH) ){
+            float reference = lanes.findCenter().x-dashCam.get(CAP_PROP_FRAME_WIDTH)/2.0;
+            cout << reference << endl;
+        }
         // Overlap lanes on the video
         lanes.display(frame);
         // Wait 1 miliseconds
