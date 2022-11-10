@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="0.000123031496" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="0.000123031496" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -157,24 +157,29 @@
 <board>
 <plain>
 <wire x1="0" y1="0" x2="143.18" y2="0" width="0" layer="20"/>
-<wire x1="143.18" y1="0" x2="141.91" y2="109.21" width="0" layer="20"/>
-<wire x1="141.91" y1="109.21" x2="0" y2="109.21" width="0" layer="20"/>
+<wire x1="143.18" y1="0" x2="143.18" y2="109.21" width="0" layer="20"/>
+<wire x1="143.18" y1="109.21" x2="0" y2="109.21" width="0" layer="20"/>
 <wire x1="0" y1="109.21" x2="0" y2="0" width="0" layer="20"/>
 <text x="60.96" y="78.74" size="2.54" layer="21">Power_It V1.0</text>
-<hole x="25.4" y="3.81" drill="3.2"/>
+<hole x="25.4" y="4.359909375" drill="3.2"/>
 <hole x="25.4" y="80.01" drill="3.2"/>
-<hole x="120.65" y="3.81" drill="3.2"/>
-<hole x="120.65" y="80.01" drill="3.2"/>
+<hole x="120.05" y="4.359909375" drill="3.2"/>
+<hole x="120.05" y="80.01" drill="3.2"/>
 <text x="64.77" y="48.26" size="1.778" layer="21">4x 18650 Cells</text>
 <text x="5.08" y="88.9" size="1.778" layer="21">5V Rail (x7)</text>
 <text x="128.27" y="7.62" size="1.778" layer="21">3.3V Rail (x7)</text>
-<hole x="5.715" y="5.08" drill="4.499990625"/>
-<hole x="5.715" y="105.41" drill="4.499990625"/>
-<hole x="137.795" y="105.41" drill="4.499990625"/>
-<hole x="137.795" y="5.08" drill="4.499990625"/>
+<hole x="4.953" y="5.08" drill="4.499990625"/>
+<hole x="4.953" y="105.41" drill="4.499990625"/>
+<hole x="138.176" y="105.41" drill="4.499990625"/>
+<hole x="138.176" y="5.08" drill="4.499990625"/>
 <text x="88.9" y="85.09" size="1.778" layer="21">12V Rail (x3)</text>
 <dimension x1="0" y1="0" x2="143.51" y2="-1.27" x3="71.755" y3="-7.62" textsize="1.778" layer="1" dtype="horizontal"/>
 <dimension x1="0" y1="109.21" x2="0" y2="0" x3="-13.97" y3="54.605" textsize="1.778" layer="1" dtype="horizontal"/>
+<dimension x1="0" y1="109.21" x2="4.998821875" y2="109.1685625" x3="2.468228125" y3="105.4273125" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="0" y1="109.21" x2="0" y2="105.45745" x3="4.998821875" y3="107.333725" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="143.18" y1="109.21" x2="138.177134375" y2="109.176909375" x3="140.703465625" y3="105.4292375" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="143.18" y1="109.21" x2="143.221921875" y2="105.455375" x3="138.272328125" y3="107.27765625" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="143.18" y1="0" x2="143.198996875" y2="5.009828125" x3="138.16630625" y3="2.523959375" textsize="1.778" layer="1" dtype="diameter"/>
 </plain>
 <libraries>
 <library name="con-ptr500" urn="urn:adsk.eagle:library:181">
@@ -404,7 +409,7 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules name="default *">
+<designrules name="PowerBoard">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -425,9 +430,9 @@ design rules under a new name.</description>
 <param name="mdWireWire" value="1mm"/>
 <param name="mdWirePad" value="1mm"/>
 <param name="mdWireVia" value="1mm"/>
-<param name="mdPadPad" value="6mil"/>
-<param name="mdPadVia" value="6mil"/>
-<param name="mdViaVia" value="6mil"/>
+<param name="mdPadPad" value="0.205mm"/>
+<param name="mdPadVia" value="0.205mm"/>
+<param name="mdViaVia" value="0.205mm"/>
 <param name="mdSmdPad" value="6mil"/>
 <param name="mdSmdVia" value="6mil"/>
 <param name="mdSmdSmd" value="6mil"/>

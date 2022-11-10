@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="5" altunitdist="mil" altunit="mil"/>
+<grid distance="0.000123031496" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.000123031496" altunitdist="mil" altunit="mil"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -73,9 +73,9 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="0" x2="106.35" y2="0" width="0" layer="20"/>
-<wire x1="106.35" y1="0" x2="106.35" y2="99.05" width="0" layer="20"/>
-<wire x1="106.35" y1="99.05" x2="0" y2="99.05" width="0" layer="20"/>
+<wire x1="0" y1="0" x2="104.6988" y2="0.0489375" width="0" layer="20"/>
+<wire x1="104.6988" y1="0.0489375" x2="104.6988" y2="99.0989375" width="0" layer="20"/>
+<wire x1="104.6988" y1="99.0989375" x2="0" y2="99.05" width="0" layer="20"/>
 <wire x1="0" y1="99.05" x2="0" y2="0" width="0" layer="20"/>
 <dimension x1="0" y1="0" x2="106.35" y2="0" x3="53.175" y3="-10.16" textsize="1.778" layer="1"/>
 <dimension x1="0" y1="0" x2="0" y2="99.05" x3="-11.43" y3="49.525" textsize="1.778" layer="1"/>
@@ -84,6 +84,11 @@
 <hole x="5.08" y="95.25" drill="4.499990625"/>
 <hole x="99.695" y="95.25" drill="4.499990625"/>
 <hole x="99.695" y="3.81" drill="4.499990625"/>
+<dimension x1="5.08" y1="1.56000625" x2="5.08" y2="6.05999375" x3="0" y3="3.81" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="0" y1="0" x2="5.08" y2="0" x3="2.54" y3="3.81" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="104.698721875" y1="0.037671875" x2="99.701471875" y2="0.033984375" x3="102.197309375" y3="3.8117625" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="104.6988" y1="0.0489375" x2="104.697725" y2="3.79479375" x3="99.69554375" y3="1.92043125" textsize="1.778" layer="1" dtype="diameter"/>
+<dimension x1="104.6988" y1="99.0989375" x2="104.693840625" y2="95.26553125" x3="99.676446875" y3="97.188728125" textsize="1.778" layer="1" dtype="diameter"/>
 </plain>
 <libraries>
 <library name="FRDM-KL25Z">
@@ -850,8 +855,8 @@ design rules under a new name.</description>
 <attribute name="DESCRIPTION" value=" KL1x, KL2x, mbed-Enabled Development Freedom Kinetis ARM® Cortex®-M0+ MCU 32-Bit Embedded Evaluation Board " x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="NXP USA" x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MP" value="FRDM-KL25Z" x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
-<attribute name="NAME" x="25.4" y="24.765" size="0.6096" layer="21" rot="R180" align="bottom-center"/>
 <attribute name="NAME" x="71.12" y="24.765" size="0.6096" layer="21" rot="R180" align="bottom-center"/>
+<attribute name="NAME" x="25.4" y="24.765" size="0.6096" layer="21" rot="R180" align="bottom-center"/>
 <attribute name="PACKAGE" value="None" x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="PRICE" value="None" x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="PURCHASE-URL" value="https://pricing.snapeda.com/search/part/FRDM-KL25Z/?ref=eda" x="48.26" y="44.45" size="1.778" layer="27" rot="R180" display="off"/>
