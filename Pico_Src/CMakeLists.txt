@@ -15,37 +15,11 @@ pico_sdk_init()
 
 #Add executable
 add_executable (main
-    Pico_src/main.c
+    main.c
 )
 
-# Link required libraries to keypad_4x4
-target_link_libraries(
-    pico_stdlib
-    )
-
-# Link required libraries to LCD_I2C
-target_link_libraries(
-    pico_stdlib
-    hardware_i2c
-    hardware_timer
-    pico_binary_info
-    )
-
-target_link_libraries(
-    pico_stdlib
-    pico_time
-    hardware_irq
-    hardware_pwm
-    hardware_pll
-    hardware_clocks
-    hardware_structs
-)
-
-# Link required libraries to main
-target_link_libraries(main
-    hardware_gpio
-    pico_time
-)
+# Link required libraries
+target_link_libraries(pico_stdlib)
 
 # Enable serial communication
 pico_enable_stdio_usb(main 1)
