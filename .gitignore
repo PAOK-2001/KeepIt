@@ -53,3 +53,4 @@ eagle.epf
 .vscode/*
 build/*
 Pico_Src/build
+Pico_Src/freertos/FreeRTOS-Kernel

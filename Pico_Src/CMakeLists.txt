@@ -6,6 +6,12 @@ include(pico_sdk_import.cmake)
 project(KeepIt)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_BUILD_FILES_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_BUILD_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 
 # Initialize the SDK
 pico_sdk_init()
@@ -13,22 +19,5 @@ pico_sdk_init()
 # Add third party libraries
 # add_library()
 
-#Add executable
-add_executable (main
-    main.c
-)
-
-# Link required libraries
-target_link_libraries(main pico_stdlib)
-
-# Enable serial communication
-pico_enable_stdio_usb(main 1)
-pico_enable_stdio_uart(main 0)
-
-# Create map/bin/hex, etc.
-pico_add_extra_outputs(main)
-
-add_custom_command(TARGET main
-        POST_BUILD
-        COMMAND arm-none-eabi-size main.elf
-)
+add_subdirectory(freertos)
+add_subdirectory(ProjectFiles)
