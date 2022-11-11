@@ -19,7 +19,7 @@ add_executable (main
 )
 
 # Link required libraries
-target_link_libraries(pico_stdlib)
+target_link_libraries(main pico_stdlib)
 
 # Enable serial communication
 pico_enable_stdio_usb(main 1)

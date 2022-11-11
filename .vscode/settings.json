@@ -25,7 +25,8 @@
         "limits": "cpp",
         "memory": "cpp",
         "functional": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "stdlib.h": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/Pico_Src"
 }

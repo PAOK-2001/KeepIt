@@ -52,7 +52,4 @@ eagle.epf
 
 .vscode/*
 build/*
-Pico_Src/CMakeFiles
-Pico_Src/elf2uf2
-Pico_Src/generated
-Pico_Src/pico-sdk
+Pico_Src/build
