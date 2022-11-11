@@ -6,7 +6,7 @@ add_executable (main
 )
 
 # Link required libraries
-target_link_libraries(main pico_stdlib freertos hardware_i2c)
+target_link_libraries(main pico_stdlib freertos hardware_i2c hardware_adc hardware_pwm)
 
 # Enable serial communication
 pico_enable_stdio_usb(main 1)
