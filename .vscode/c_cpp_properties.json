@@ -3,7 +3,10 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "./Pico_Src/**",
+                "/home/paok/pico/pico-sdk/src/rp2_common/*",
+                "/home/paok/pico/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
