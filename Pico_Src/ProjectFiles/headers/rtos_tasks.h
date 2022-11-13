@@ -23,8 +23,7 @@ void i2c_task( void *pvParameters ){
     printf("Initializing I2C Task\n");
     setup_slave();
     while(true){
-
-
+        
     }
     printf("I2C Task Finalizing");
 }

@@ -1,7 +1,6 @@
 #ifndef I2C0_SLAVE_H
 #define I2C0_SLAVE_H
 
-
 #include <stdio.h>
 #include "pico/stdlib.h"
 #include "hardware/irq.h"
@@ -20,8 +19,8 @@ void setup_slave(){
     gpio_init(I2C_SDA);
     gpio_init(I2C_SCL);
 
-    i2c_init(i2c0, 100000);
-    i2c_set_slave_mode(i2c0, true, 0x69);
+    i2c_init(i2c0, I2C_BAUDRATE);
+    i2c_set_slave_mode(i2c0, true, SLAVE_ADDR);
 
     gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
     gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
