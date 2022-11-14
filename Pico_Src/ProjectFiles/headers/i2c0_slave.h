@@ -29,10 +29,6 @@ void setup_slave(){
 }
 
 void communicate_slave(){
-    char msg[20];
-    sprintf(msg, "%d",i2c_get_read_available(i2c0));
-    printf(msg);
-    printf("\n");
     // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
     if(i2c_get_read_available(i2c0) > 3){
         i2c_read_raw_blocking(i2c0, rxdata, 3);
