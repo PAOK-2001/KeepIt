@@ -107,16 +107,6 @@ void laneDetector::findLanes(){
             slopes.push_back(fit.first);
             intercepts.push_back(fit.second);
         }
-        /* Seperate left lane (negative slope)
-        else if(fit.first<0){
-            leftSide_slopes.push_back(fit.first);
-            leftSide_intercepts.push_back(fit.second);
-        }
-        // Separate right lane (positive slope)
-        else{
-            rightSide_slopes.push_back(fit.first);
-            rightSide_intercepts.push_back(fit.second);
-        }*/
     }
     float averageSlope = averageCoefficient(slopes);
     for(int i = 0; i < slopes.size(); i++){
@@ -158,9 +148,9 @@ Point laneDetector::findCenter(){
 void laneDetector::display(Mat cameraFrame){
     // Blend the lineImg of detected frame with camera feed for live visualization
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
-    namedWindow("Lane Detector");
-    imshow("Lane Detector", cameraFrame);
-    imshow("Line",edgeImg); 
+    //namedWindow("Lane Detector");
+    //imshow("Lane Detector", cameraFrame);
+    //imshow("Line",edgeImg); 
 }
 
 #endif
