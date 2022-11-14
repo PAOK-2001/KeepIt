@@ -5,13 +5,21 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "opencv2/imgcodecs.hpp"
-#include <wiringPiI2C.h>
 #include <wiringPi.h>
+#include <wiringPiI2C.h>
 
+#define PICO_ADDR 0x0a
 using namespace std;
 using namespace cv;
 
 int main(){
+    int Com2Pico = wiringPiI2CSetup(PICO_ADDR);
+    if (Com2Pico == -1) {
+        cerr << "Failed to intialize communication with Pico.\n";
+        return -1;
+    }
+    cout << "Communication with PIco successfully setup.\n";
+
     laneDetector lanes;
     Mat frame;
     VideoCapture dashCam(0);
@@ -24,6 +32,7 @@ int main(){
         return -1;
     }
     int counter = 0;
+
     for (;;){
         dashCam.read(frame);
         // Check if selected source is sending information
@@ -38,7 +47,7 @@ int main(){
         // Find center of previously calculated lanes
         if(lanes.findCenter().x > 0 && lanes.findCenter().x < dashCam.get(CAP_PROP_FRAME_WIDTH) ){
             float reference = lanes.findCenter().x-dashCam.get(CAP_PROP_FRAME_WIDTH)/2.0;
-            cout << reference << endl;
+            wiringPiI2CWriteReg16 (Com2Pico, 0x01, reference);
         }
         // Overlap lanes on the video
         lanes.display(frame);
