@@ -27,7 +27,8 @@
         "functional": "cpp",
         "iostream": "cpp",
         "stdlib.h": "c",
-        "i2c.h": "c"
+        "i2c.h": "c",
+        "irq.h": "c"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/Pico_Src"
 }

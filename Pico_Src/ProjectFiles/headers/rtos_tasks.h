@@ -1,4 +1,5 @@
 #include <FreeRTOS.h>
+#include <queue.h>
 #include "hardware/pwm.h"
 #include "hardware/adc.h"
 #include "current_filter.h"
@@ -15,27 +16,27 @@
 #define VOLTAGE_SENSOR_PIN 28
 #define MOTOR_PWM_PERIOD 1
 
+
 int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
-
+float readReference;
 //REMEMBER TO USE vTaskDelay() TO PREVENT TASK STARVATION
-
 void i2c_task( void *pvParameters ){
     printf("Initializing I2C Task\n");
     setup_slave();
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-     while (true) {
-        gpio_put(LED_PIN, 1);
-        sleep_ms(25);
-        gpio_put(LED_PIN, 0);
-        sleep_ms(25);
+    readReference = 0.0;
+    while (1) {
+        readReference +=1;
+        communicate_slave();
+        vTaskDelay(10);
     }
     printf("I2C Task Finalizing");
 }
 
 void control_task( void *pvParameters ) {
     printf("Initializing Control Task\n");
+    while(1){
+        vTaskDelay(10);
+    }
     /*
     - infinite loop
     - Kp, Ki and Kd are constants, setpoint (reference) is always 0
