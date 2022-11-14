@@ -22,8 +22,14 @@ int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
 void i2c_task( void *pvParameters ){
     printf("Initializing I2C Task\n");
     setup_slave();
-    while(true){
-        
+    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    gpio_init(LED_PIN);
+    gpio_set_dir(LED_PIN, GPIO_OUT);
+     while (true) {
+        gpio_put(LED_PIN, 1);
+        sleep_ms(25);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(25);
     }
     printf("I2C Task Finalizing");
 }
