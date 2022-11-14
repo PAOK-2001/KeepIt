@@ -9,9 +9,9 @@
 #define I2C_BAUDRATE 100000
 #define SLAVE_ADDR 0x0A
 
-
-uint8_t rxdata[4];
+uint8_t rxdata[3];
 uint8_t txdata[2];
+
 
 void setup_slave(){
     const int I2C_SDA = 4;
@@ -29,7 +29,13 @@ void setup_slave(){
 }
 
 void communicate_slave(){
-    i2c_read_raw_blocking(i2c0,rxdata,4);
+    // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
+    if(i2c_get_read_available(i2c0) > 3){
+        i2c_read_raw_blocking(i2c0, rxdata, 3);
+        int16_t receivedError = ((rxdata[2]<<8) | rxdata[1]); //Shift to convert to signed  16 bit integer
+    }else{
+        printf("Received less than 16 bytes\n");
+    }
 }
 
 #endif
