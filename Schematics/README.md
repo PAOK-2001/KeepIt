@@ -40,4 +40,4 @@ _GENERAL PURPOSE_:
 - 12V: x3
 - GND: x7
 
-_Acknowlegment:_ Special thanks to @CorradoCorrado for his guidance on the design and manufacturing of the boards!
+_Acknowlegment:_ Special thanks to [John Corrado (@CorradoCorrado)](https://github.com/CorradoCorrado) for his guidance on the design and manufacturing of the boards!
