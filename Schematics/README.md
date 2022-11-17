@@ -40,4 +40,4 @@ _GENERAL PURPOSE_:
 - 12V: x3
 - GND: x7
 
-_#Note:_ This pinout is in regard the Raspberry Pi Pico version, as the KL25Z board is no longer employed,
+_Acknowlegment:_ Special thanks to @CorradoCorrado for his guidance on the design and manufacturing of the boards!
