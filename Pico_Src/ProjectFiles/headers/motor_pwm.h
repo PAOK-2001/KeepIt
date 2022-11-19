@@ -50,7 +50,3 @@ void servo_180_sweep(){
         sleep_ms(500);
     }
 }
-
-void move_forward(){
-    z
-}
