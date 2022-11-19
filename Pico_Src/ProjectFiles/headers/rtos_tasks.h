@@ -9,28 +9,24 @@
 #include "i2c0_slave.h"
 #include "motor_pwm.h"
 
-#define MOTOR_OUTPUT_PIN_1 1
-#define MOTOR_OUTPUT_PIN_2 1
-
-#define SERVO_OUTPUT_PIN 11
-
 #define CURRENT_SENSOR_PIN_1 26
 #define CURRENT_SENSOR_PIN_2 27
 
 #define VOLTAGE_SENSOR_PIN 28
-#define MOTOR_PWM_PERIOD 34464
 
 int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
 QueueHandle_t xErrorQueue;
 
 void i2c_task( void *pvParameters ){
     setup_slave();
+    xErrorQueue = xQueueCreate(4, sizeof(int16_t));
     for(;;){
         // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
         //printf("Received %d from I2C\n",i2c_get_read_available(i2c0));
         if(i2c_get_read_available(i2c0) > 3){
             i2c_read_raw_blocking(i2c0, rxdata, 3);
             int16_t receivedError = ((rxdata[2]<<8) | rxdata[1]); //Shift to convert to signed  16 bit integer
+            if( xErrorQueue != 0 ){ if( xQueueSend( xErrorQueue, ( void * ) &receivedError, (TickType_t) 1 ) != pdPASS ){ }}
         }else{
             printf("Received less than 16 bytes\n");
         }
@@ -42,6 +38,7 @@ void control_task( void *pvParameters ) {
     printf("Initializing Control Task\n");
     for(;;){
         int16_t inputErr;
+        if( xErrorQueue != NULL ){if( xQueueReceive( xErrorQueue,&(inputErr),(TickType_t) 1 ) == pdPASS ){}}
         printf("Error in control task: %d\n",inputErr);
         vTaskDelay(5);
     }
@@ -73,8 +70,8 @@ void motors_task( void *pvParameters ){
     servo_init();
     motors_init();
     for(;;){
+        motors_forward(2000);
         servo_180_sweep();
-        
     }
 }
 
