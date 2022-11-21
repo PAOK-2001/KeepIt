@@ -63,7 +63,14 @@ void motors_init() {
 }
 
 void servo_write(uint period){
-    pwm_set_chan_level(servo_slice, servo_channel, period);  /// Setting the duty period (0.6 ms)
+    if(period >= SERVO_MAX_RIGHT){
+        pwm_set_chan_level(servo_slice, servo_channel, SERVO_MAX_RIGHT);
+    }
+    else if(period <= SERVO_MAX_LEFT){
+        pwm_set_chan_level(servo_slice, servo_channel, SERVO_MAX_LEFT);
+    }else{
+        pwm_set_chan_level(servo_slice, servo_channel, period);  /// Setting the duty period (0.6 ms)
+    }
 }
 
 void servo_180_sweep(){
