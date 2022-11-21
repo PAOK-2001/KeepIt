@@ -1,41 +1,46 @@
+#ifndef RTOS_TASKS_H
+#define RTOS_TASKS_H
+
 #include <FreeRTOS.h>
 #include <queue.h>
 #include "hardware/pwm.h"
 #include "hardware/adc.h"
 #include "current_filter.h"
 #include "i2c0_slave.h"
-
-#define MOTOR_OUTPUT_PIN_1 1
-#define MOTOR_OUTPUT_PIN_2 1
-
-#define SERVO_OUTPUT_PIN 11
+#include "motor_pwm.h"
 
 #define CURRENT_SENSOR_PIN_1 26
 #define CURRENT_SENSOR_PIN_2 27
 
 #define VOLTAGE_SENSOR_PIN 28
-#define MOTOR_PWM_PERIOD 1
-
 
 int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
-float readReference;
-//REMEMBER TO USE vTaskDelay() TO PREVENT TASK STARVATION
+QueueHandle_t xErrorQueue;
+
 void i2c_task( void *pvParameters ){
-    printf("Initializing I2C Task\n");
     setup_slave();
-    readReference = 0.0;
-    while (1) {
-        readReference +=1;
-        communicate_slave();
-        vTaskDelay(10);
+    xErrorQueue = xQueueCreate(4, sizeof(int16_t));
+    for(;;){
+        // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
+        //printf("Received %d from I2C\n",i2c_get_read_available(i2c0));
+        if(i2c_get_read_available(i2c0) > 3){
+            i2c_read_raw_blocking(i2c0, rxdata, 3);
+            int16_t receivedError = ((rxdata[2]<<8) | rxdata[1]); //Shift to convert to signed  16 bit integer
+            if( xErrorQueue != 0 ){ if( xQueueSend( xErrorQueue, ( void * ) &receivedError, (TickType_t) 1 ) != pdPASS ){ }}
+        }else{
+            printf("Received less than 16 bytes\n");
+        }
+        vTaskDelay(5);
     }
-    printf("I2C Task Finalizing");
 }
 
 void control_task( void *pvParameters ) {
     printf("Initializing Control Task\n");
-    while(1){
-        vTaskDelay(10);
+    for(;;){
+        int16_t inputErr;
+        if( xErrorQueue != NULL ){if( xQueueReceive( xErrorQueue,&(inputErr),(TickType_t) 1 ) == pdPASS ){}}
+        printf("Error in control task: %d\n",inputErr);
+        vTaskDelay(5);
     }
     /*
     - infinite loop
@@ -62,34 +67,12 @@ void control_task( void *pvParameters ) {
 - send constant value to motors (always forward)
 */
 void motors_task( void *pvParameters ){
-    printf("Initializing Motors Task\n");
-    gpio_set_function(MOTOR_OUTPUT_PIN_1, GPIO_FUNC_PWM);
-    gpio_set_function(MOTOR_OUTPUT_PIN_2, GPIO_FUNC_PWM);
-    gpio_set_function(SERVO_OUTPUT_PIN, GPIO_FUNC_PWM);
-
-    uint slice_num_1 = pwm_gpio_to_slice_num(MOTOR_OUTPUT_PIN_1);
-    uint slice_num_2 = pwm_gpio_to_slice_num(MOTOR_OUTPUT_PIN_2);
-    uint slice_num_servo = pwm_gpio_to_slice_num(SERVO_OUTPUT_PIN);
-    uint servo_channel = pwm_gpio_to_channel(SERVO_OUTPUT_PIN);
-
-    pwm_set_wrap(slice_num_1, MOTOR_PWM_PERIOD);
-    pwm_set_wrap(slice_num_2, MOTOR_PWM_PERIOD);
-    pwm_set_wrap(slice_num_servo, MOTOR_PWM_PERIOD);
-
-    pwm_set_chan_level(slice_num_1, PWM_CHAN_A, MOTOR_PWM_PERIOD);
-    pwm_set_enabled(slice_num_1, true);
-    if (slice_num_1 != slice_num_2) {
-        pwm_set_chan_level(slice_num_2, PWM_CHAN_A, MOTOR_PWM_PERIOD);
-        pwm_set_enabled(slice_num_2, true);
+    servo_init();
+    motors_init();
+    for(;;){
+        motors_forward(2000);
+        servo_180_sweep();
     }
-
-    pwm_set_enabled(slice_num_servo, true);
-
-    while (1) {
-        pwm_set_chan_level(slice_num_servo, servo_channel, control_output);
-        vTaskDelay(10);
-    }
-    printf("Finalizing Motors Task\n");
 }
 
 /*
@@ -115,8 +98,9 @@ void sensors_task( void *pvParameters ) {
         filtered_current_2 = current_high_pass_filter(raw_current_2);
         adc_select_input(VOLTAGE_SENSOR_PIN - 26);
         voltage = adc_read() * conversion_factor;
-        vTaskDelay(10);
+        vTaskDelay(5);
     }
     printf("Finalizing sensors task\n");
 }
 
+#endif
