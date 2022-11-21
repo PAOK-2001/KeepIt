@@ -22,6 +22,7 @@ int main(){
 
     laneDetector lanes;
     Mat frame;
+    VideoWriter video("Recordings/DashCam.mp4", cv::VideoWriter::fourcc('M','J','P','G'), 10, Size(640,480));
     VideoCapture dashCam(0);
     dashCam.set(CAP_PROP_FPS,15);
     dashCam.set(CAP_PROP_FRAME_WIDTH,640);
@@ -54,8 +55,10 @@ int main(){
         // Wait 1 miliseconds
         // Read key board input, setting esc as break key
         if(waitKey(1)== 27){
+            video.release();
             break;
         }
     }
+    video.release();
     return 0;
 }

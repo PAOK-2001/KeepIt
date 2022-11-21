@@ -145,12 +145,10 @@ Point laneDetector::findCenter(){
 
 // Displays detected lanes unto a given image
 // @param frame to draw lanes unto.
-void laneDetector::display(Mat cameraFrame){
+void laneDetector::display(Mat cameraFrame, &VideoWriter video){
     // Blend the lineImg of detected frame with camera feed for live visualization
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
-    //namedWindow("Lane Detector");
-    //imshow("Lane Detector", cameraFrame);
-    //imshow("Line",edgeImg); 
+    video.write(cameraFrame);
 }
 
 #endif
