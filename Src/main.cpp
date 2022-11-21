@@ -48,9 +48,10 @@ int main(){
         if(lanes.findCenter().x > 0 && lanes.findCenter().x < dashCam.get(CAP_PROP_FRAME_WIDTH) ){
             float reference = lanes.findCenter().x-dashCam.get(CAP_PROP_FRAME_WIDTH)/2.0;
             wiringPiI2CWriteReg16 (Com2Pico, 0x01, reference);
+	    cout << reference << endl;
         }
         // Overlap lanes on the video
-        lanes.display(frame);
+        //lanes.display(frame);
         // Wait 1 miliseconds
         // Read key board input, setting esc as break key
         if(waitKey(1)== 27){

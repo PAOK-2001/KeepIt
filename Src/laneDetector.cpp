@@ -148,9 +148,9 @@ Point laneDetector::findCenter(){
 void laneDetector::display(Mat cameraFrame){
     // Blend the lineImg of detected frame with camera feed for live visualization
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
-    //namedWindow("Lane Detector");
-    //imshow("Lane Detector", cameraFrame);
-    //imshow("Line",edgeImg); 
+    namedWindow("Lane Detector");
+    imshow("Lane Detector", cameraFrame);
+    imshow("Line",edgeImg); 
 }
 
 #endif
