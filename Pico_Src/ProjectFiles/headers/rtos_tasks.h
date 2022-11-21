@@ -16,6 +16,7 @@
 
 int filtered_current_1, filtered_current_2, voltage;
 int control_output = 715;
+bool isReceiving = false;
 QueueHandle_t xErrorQueue;
 
 void i2c_task( void *pvParameters ){
@@ -25,10 +26,12 @@ void i2c_task( void *pvParameters ){
         // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
         //printf("Received %d from I2C\n",i2c_get_read_available(i2c0));
         if(i2c_get_read_available(i2c0) > 3){
+            isReceiving = true;
             i2c_read_raw_blocking(i2c0, rxdata, 3);
             int16_t receivedError = ((rxdata[2]<<8) | rxdata[1]); //Shift to convert to signed  16 bit integer
             if( xErrorQueue != 0 ){ if( xQueueSend( xErrorQueue, ( void * ) &receivedError, (TickType_t) 1 ) != pdPASS ){ }}
         }else{
+            isReceiving = false;
             printf("Received less than 16 bytes\n");
         }
         vTaskDelay(5);
@@ -51,9 +54,12 @@ void control_task( void *pvParameters ) {
 void motors_task( void *pvParameters ){
     servo_init();
     motors_init();
+    motors_forward(0); //Stop motors after initial config;
     for(;;){
-        servo_write(control_output);
-        motors_forward(3950);
+        if(isReceiving){
+            servo_write(control_output);
+            motors_forward(2950);
+        }
         vTaskDelay(5);
     }
 }

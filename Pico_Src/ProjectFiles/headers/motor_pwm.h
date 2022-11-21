@@ -7,9 +7,9 @@
 
 #define SERVO_PIN 11
 #define SERVO_WRAP 9804
-#define SERVO_CENTER 715 //Servo at 0°
-#define SERVO_MAX_LEFT 631 //Servo at -10°
-#define SERVO_MAX_RIGHT 799 //Servo at +10°
+#define SERVO_MAX_LEFT 620   //Servo at -10°
+#define SERVO_CENTER 715     //Servo at 0°
+#define SERVO_MAX_RIGHT 799  //Servo at +10°
 
 #define MOTOR_PWM_PERIOD 10000
 #define MAX_SPEED MOTOR_PWM_PERIOD*0.8
