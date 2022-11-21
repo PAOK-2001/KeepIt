@@ -14,7 +14,9 @@
 
 #define VOLTAGE_SENSOR_PIN 28
 
-int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
+int filtered_current_1, filtered_current_2, voltage;
+int control_output = 715;
+bool isReceiving = false;
 QueueHandle_t xErrorQueue;
 
 void i2c_task( void *pvParameters ){
@@ -24,10 +26,12 @@ void i2c_task( void *pvParameters ){
         // Read 3 bytes form I2C bus at a time (addr, byte1, byte2)
         //printf("Received %d from I2C\n",i2c_get_read_available(i2c0));
         if(i2c_get_read_available(i2c0) > 3){
+            isReceiving = true;
             i2c_read_raw_blocking(i2c0, rxdata, 3);
             int16_t receivedError = ((rxdata[2]<<8) | rxdata[1]); //Shift to convert to signed  16 bit integer
             if( xErrorQueue != 0 ){ if( xQueueSend( xErrorQueue, ( void * ) &receivedError, (TickType_t) 1 ) != pdPASS ){ }}
         }else{
+            isReceiving = false;
             printf("Received less than 16 bytes\n");
         }
         vTaskDelay(5);
@@ -35,43 +39,28 @@ void i2c_task( void *pvParameters ){
 }
 
 void control_task( void *pvParameters ) {
+    const float Kp = 0.45;
+    int16_t inputErr = 0;
     printf("Initializing Control Task\n");
     for(;;){
-        int16_t inputErr;
         if( xErrorQueue != NULL ){if( xQueueReceive( xErrorQueue,&(inputErr),(TickType_t) 1 ) == pdPASS ){}}
-        printf("Error in control task: %d\n",inputErr);
+        control_output = 715-(Kp*(inputErr));
+        printf("Error in control task: %d Control output:%d \n",inputErr, control_output);
         vTaskDelay(5);
     }
-    /*
-    - infinite loop
-    - Kp, Ki and Kd are constants, setpoint (reference) is always 0
-    - Input and output are shared memory
-        currentTime = millis();                              
-        elapsedTime = (double)(currentTime - previousTime); 
-        
-        error = Setpoint - Input;                       
-        cumError += error * elapsedTime;                
-        rateError = (error - lastError) / elapsedTime;     
- 
-        double output = kp*error + ki*cumError + kd*rateError;  
- 
-        lastError = error;             
-        previousTime = currentTime;
-    */
     printf("Control Task Finalizing\n");
 }
 
-/*
-- infinite loop
-- send control loop output to servo
-- send constant value to motors (always forward)
-*/
 void motors_task( void *pvParameters ){
     servo_init();
     motors_init();
+    motors_forward(0); //Stop motors after initial config;
     for(;;){
-        motors_forward(2000);
-        servo_180_sweep();
+        if(isReceiving){
+            servo_write(control_output);
+            motors_forward(2950);
+        }
+        vTaskDelay(5);
     }
 }
 
