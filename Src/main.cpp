@@ -51,7 +51,7 @@ int main(){
             wiringPiI2CWriteReg16 (Com2Pico, 0x01, reference);
         }
         // Overlap lanes on the video
-        lanes.display(frame);
+        lanes.record(frame, video);
         // Wait 1 miliseconds
         // Read key board input, setting esc as break key
         if(waitKey(1)== 27){

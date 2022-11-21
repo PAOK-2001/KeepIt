@@ -27,7 +27,7 @@ class laneDetector{
         void loadFrame(Mat cameraFrame);
         void findLanes();
         Point findCenter();
-        void display(Mat cameraFrame);
+        void record(Mat cameraFrame, VideoWriter &video);
 };
 
 // Default constructor of lane detector
@@ -145,7 +145,7 @@ Point laneDetector::findCenter(){
 
 // Displays detected lanes unto a given image
 // @param frame to draw lanes unto.
-void laneDetector::display(Mat cameraFrame, &VideoWriter video){
+void laneDetector::record(Mat cameraFrame, VideoWriter &video){
     // Blend the lineImg of detected frame with camera feed for live visualization
     addWeighted(cameraFrame,1,lineImg,0.4,0,cameraFrame);
     video.write(cameraFrame);
