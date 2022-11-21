@@ -14,7 +14,8 @@
 
 #define VOLTAGE_SENSOR_PIN 28
 
-int i2c_input, control_output, filtered_current_1, filtered_current_2, voltage;
+int filtered_current_1, filtered_current_2, voltage;
+int control_output = 715;
 QueueHandle_t xErrorQueue;
 
 void i2c_task( void *pvParameters ){
@@ -35,43 +36,25 @@ void i2c_task( void *pvParameters ){
 }
 
 void control_task( void *pvParameters ) {
+    const float Kp = 0.45;
+    int16_t inputErr = 0;
     printf("Initializing Control Task\n");
     for(;;){
-        int16_t inputErr;
         if( xErrorQueue != NULL ){if( xQueueReceive( xErrorQueue,&(inputErr),(TickType_t) 1 ) == pdPASS ){}}
-        printf("Error in control task: %d\n",inputErr);
+        control_output = 715-(Kp*(inputErr));
+        printf("Error in control task: %d Control output:%d \n",inputErr, control_output);
         vTaskDelay(5);
     }
-    /*
-    - infinite loop
-    - Kp, Ki and Kd are constants, setpoint (reference) is always 0
-    - Input and output are shared memory
-        currentTime = millis();                              
-        elapsedTime = (double)(currentTime - previousTime); 
-        
-        error = Setpoint - Input;                       
-        cumError += error * elapsedTime;                
-        rateError = (error - lastError) / elapsedTime;     
- 
-        double output = kp*error + ki*cumError + kd*rateError;  
- 
-        lastError = error;             
-        previousTime = currentTime;
-    */
     printf("Control Task Finalizing\n");
 }
 
-/*
-- infinite loop
-- send control loop output to servo
-- send constant value to motors (always forward)
-*/
 void motors_task( void *pvParameters ){
     servo_init();
     motors_init();
     for(;;){
-        motors_forward(2000);
-        servo_180_sweep();
+        servo_write(control_output);
+        motors_forward(3950);
+        vTaskDelay(5);
     }
 }
 
