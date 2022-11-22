@@ -22,7 +22,7 @@ int main(){
 
     laneDetector lanes;
     Mat frame;
-    VideoWriter video("Recordings/DashCam.mp4", cv::VideoWriter::fourcc('M','J','P','G'), 10, Size(640,480));
+    VideoWriter video("Recordings/DashCam.avi", VideoWriter::fourcc('M','J','P','G'), 10, Size(640,480));
     VideoCapture dashCam(0);
     dashCam.set(CAP_PROP_FPS,15);
     dashCam.set(CAP_PROP_FRAME_WIDTH,640);
