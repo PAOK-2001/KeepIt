@@ -17,6 +17,7 @@
 int filtered_current_1, filtered_current_2, voltage;
 int control_output = 715;
 bool isReceiving = false;
+bool current_overload = false;
 QueueHandle_t xErrorQueue;
 
 void i2c_task( void *pvParameters ){
@@ -56,9 +57,11 @@ void motors_task( void *pvParameters ){
     motors_init();
     motors_forward(0); //Stop motors after initial config;
     for(;;){
-        if(isReceiving){
+        if(isReceiving && !current_overload){
             servo_write(control_output);
             motors_forward(2950);
+        } else {
+            motors_forward(0);
         }
         vTaskDelay(5);
     }
@@ -71,7 +74,8 @@ void motors_task( void *pvParameters ){
 */
 void sensors_task( void *pvParameters ) {
     printf("Initializing sensors task\n");
-    int raw_current_1, raw_current_2;
+    int buffer_1[5] = {0,0,0,0,0}, buffer_2[5] = {0,0,0,0,0};
+    int raw_current_1, raw_current_2, flag_1, flag_2;
     const float conversion_factor = 3.3f / (1 << 12);
     adc_init();
     adc_gpio_init(CURRENT_SENSOR_PIN_1);
@@ -81,12 +85,17 @@ void sensors_task( void *pvParameters ) {
     while(1) {
         adc_select_input(CURRENT_SENSOR_PIN_1 - 26);
         raw_current_1 = adc_read() * conversion_factor;
-        filtered_current_1 = current_high_pass_filter(raw_current_1);
+        shift_buffer(buffer_1, raw_current_1, 5);
+        filtered_current_1 = current_high_pass_filter(buffer_1);
+        flag_1 = current_high_pass_filter(buffer_1);
         adc_select_input(CURRENT_SENSOR_PIN_2 - 26);
         raw_current_2 = adc_read() * conversion_factor;
-        filtered_current_2 = current_high_pass_filter(raw_current_2);
+        shift_buffer(buffer_2, raw_current_2, 5);
+        filtered_current_2 = current_high_pass_filter(buffer_2);
+        flag_2 = current_high_pass_filter(buffer_2);
         adc_select_input(VOLTAGE_SENSOR_PIN - 26);
         voltage = adc_read() * conversion_factor;
+        current_overload = flag_1 || flag_2;
         vTaskDelay(5);
     }
     printf("Finalizing sensors task\n");
