@@ -1,6 +1,6 @@
-#define CURRENT_THRESHOLD 10
+#define CURRENT_THRESHOLD 2
 
-int current_high_pass_filter(int* current_buf) {
+int current_low_pass_filter(int* current_buf) {
     float coefficients[5] = {0.0338, 0.2401, 0.4521, 0.2401, 0.0338};
     float filtered_val = 0;
     for (int i=0; i<5; i++) {
