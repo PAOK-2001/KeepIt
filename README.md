@@ -3,9 +3,16 @@
 
 The present system is intended as a demonstrator of how to apply computer vision techniques for autonomous driving. In particular, we tackle the matter of lane detection and following.
 
-To deploy the image processing we will use a _Raspberry Pi 4B_ which will run the OpenCv script that finds the lanes and computes the center; it will also calculate the offset between said center and the center of the camera, returning an error (measured in pixels). The systems for moving and steering the car are controlled by a _Raspberry Pi Pico_, running FreeRTOS. The micro-controller will read the error by I2C and apply a proportional control loop to correct the direction using the steering. The system is summarized in the following diagram.
+To deploy the image processing we will use a _Raspberry Pi 4B_ which will run the OpenCv script that finds the lanes and computes the center; it will also calculate the offset between said center and the center of the camera, returning an error (measured in pixels). The systems for moving and steering the car are controlled by a _Raspberry Pi Pico_, running FreeRTOS. The micro-controller will read the error by I2C and apply a proportional control loop (tunned using the Ziegler-Nichols experimental method) to correct the direction using the steering. 
+
+Current and voltage sensors for a stable functioning of the system; a low-pass filter was implemented to rule out any current peaks and only stop the system when current to the motors consistently rises as a result of motor stall.
+
+The system is summarized in the following diagram.
 
 <img src="MarkDown/blockDiagram.jpg" width=85% height=75%>
+
+<img src="MarkDown/tunning.jpeg" width=85% height=75%>
+
 
 
 # Lane Detector
@@ -109,6 +116,10 @@ For this project we decided to laser cut a custom base to build the model car up
 
 For controlling the direction of the model, we implemented a simplified version of _Ackermann Steering_ which is controlled using a servo motor. 
 
+Finished prototype             | View of Ackermann Steering
+:-------------------------:|:-------------------------:
+<img src="MarkDown/finishedPrototype.jpeg" width=90% height=80%>  |  <img src="MarkDown/ackermann.jpeg" width=90% height=90%> 
+
 ## Electrical
 
 For a secure connection a breakout board was made to map the GPIO pins using screw terminals. A power breakout board was also designed for a 4 cells 18650 BMS; however, due to a faulty BMS it was not used in the final implementation.
@@ -117,6 +128,8 @@ GPIO Breakout Board             | BMS Breakout Board
 <img src="MarkDown/gpio_breakout.jpeg" width=90% height=80%>  |  <img src="MarkDown/power_board.jpeg" width=90% height=90%> 
 
 
-# Demo Reel
+### Demo Reel: 
+
+https://www.youtube.com/watch?v=GjENCYGIipA&ab_channel=AbrahamDeAlbaFranco
 
 
