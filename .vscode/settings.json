@@ -30,5 +30,8 @@
         "i2c.h": "c",
         "irq.h": "c"
     },
-    "cmake.sourceDirectory": "${workspaceFolder}/Pico_Src"
+    "cmake.sourceDirectory": "${workspaceFolder}/Pico_Src",
+    "cSpell.words": [
+        "micrcocontroller"
+    ]
 }

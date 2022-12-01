@@ -1,6 +1,4 @@
-# PINOUT: KEEP_IT
-
-## LOGIC
+### Appendix: GPIO Breakout Board
 _I2C0_
 - GP4 (I2C0_SDA)
 - GP5 (I2CO_SCL)
@@ -25,6 +23,7 @@ _ALIMENTATION_
 
 _VOLTAGE SENSOR (ADC)_
 - GP28
+
 _CURRENT SENSORS (ADC)_
 - SENSOR1: GP27
 - SENSOR2: GP26
@@ -34,10 +33,13 @@ _GENERAL PURPOSE_:
 - G99
 - GP17
 
-## POWER
+### POWER
+
 - 5V:  x7
 - 3.3V: x7
 - 12V: x3
 - GND: x7
+
+# Photos
 
 _Acknowlegment:_ Special thanks to [John Corrado (@CorradoCorrado)](https://github.com/CorradoCorrado) for his guidance on the design and manufacturing of the boards!
